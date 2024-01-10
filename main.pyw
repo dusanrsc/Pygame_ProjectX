@@ -15,7 +15,7 @@ pygame.mixer.init()
 # game constants
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Earth Defender"
+SCREEN_TITLE = "ProjectX"
 
 FPS = 60
 BULLET_SPEED = 30
