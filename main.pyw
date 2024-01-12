@@ -19,6 +19,7 @@ SCREEN_HEIGHT = 600
 SCREEN_TITLE = "ProjectX"
 
 FPS = 60
+PLAYER_SPEED = 10
 BULLET_SPEED = 30
 ROCKET_SPEED = 10
 METEOR_SPEED = 5
@@ -41,6 +42,8 @@ ALPHA = GREEN
 # settings
 __version__ = "v1.0"
 running = True
+switch_screen = True
+game_over_trigger = True
 alpha_value = 128
 
 # decoration
@@ -86,8 +89,8 @@ class Player(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(center = [pos_x, pos_y])
 
 	def update(self):
-		self.rect.x = pygame.mouse.get_pos()[0]
-		self.rect.y = pygame.mouse.get_pos()[1]
+		self.rect.x = pygame.mouse.get_pos()[0] - 120
+		self.rect.y = pygame.mouse.get_pos()[1] - 25
 
 # class bullet
 class Bullet(pygame.sprite.Sprite):
@@ -146,6 +149,21 @@ class Hudge_Meteor(pygame.sprite.Sprite):
 	def update(self):
 		# mob movement direction
 		self.rect.x -= METEOR_SPEED - 3
+
+		# delete mob when is out of screen
+		if self.rect.x <= -100:
+			self.kill()
+
+class Small_Meteor(pygame.sprite.Sprite):
+	def __init__(self, pos_x=(SCREEN_WIDTH + SCREEN_WIDTH), pos_y=random.randint(30, SCREEN_HEIGHT - 30)):
+		super().__init__()
+		self.image = pygame.image.load("small_meteor.png").convert()
+		self.image.set_colorkey(ALPHA)
+		self.rect = self.image.get_rect(center = [pos_x, pos_y])
+
+	def update(self):
+		# mob movement direction
+		self.rect.x -= METEOR_SPEED + 3
 
 		# delete mob when is out of screen
 		if self.rect.x <= -100:
@@ -265,14 +283,8 @@ def rockets_indicator():
 		SCREEN.blit(rocket_thumbnail2, (750, 10))
 		SCREEN.blit(rocket_thumbnail3, (770, 10))
 
-def score_counter():
-	my_font = pygame.font.SysFont("Comic Sans MS", 20)
-
-	score_text = my_font.render("SCORE:", False, GREEN)
-	score_value = my_font.render(f"{score}", False, GREEN)
-
-	SCREEN.blit(score_text, (540, 25))
-	SCREEN.blit(score_value, (620, 25))
+def menu():
+	pass
 
 # creating sprite groups
 # player sprite group
@@ -295,6 +307,10 @@ meteor_group.add(meteor)
 hudge_meteor_group = pygame.sprite.Group()
 hudge_meteor = Hudge_Meteor()
 hudge_meteor_group.add(hudge_meteor)
+
+small_meteor_group = pygame.sprite.Group()
+small_meteor = Small_Meteor()
+small_meteor_group.add(small_meteor)
 
 # loading decoration images
 # earth image
@@ -332,10 +348,52 @@ while running:
 		meteor = Meteor(pos_y=random.randint(0, SCREEN_HEIGHT))
 		meteor_group.add(meteor)
 
-		# if asteroid (mob) hit earth 3x GAME OVER
+		# if meteor (mob) hit earth 3x GAME OVER
 		EARTH_HEALTH -= 1
 		if EARTH_HEALTH < 0:
-			exit()
+			bullet_ready = False
+			rocket_ready = False
+
+			game_over_trigger = False
+			player.kill()
+
+	if hudge_meteor.rect.x <= -50:
+		hudge_meteor = Small_Meteor(pos_y=random.randint(0, SCREEN_HEIGHT * 12))
+		hudge_meteor_group.add(hudge_meteor)
+
+		# if meteor (mob) hit earth 3x GAME OVER
+		EARTH_HEALTH -= 3
+		if EARTH_HEALTH < 0:
+			bullet_ready = False
+			rocket_ready = False
+
+			game_over_trigger = False
+			player.kill()
+
+	if small_meteor.rect.x <= -50:
+		small_meteor = Small_Meteor(pos_y=random.randint(0, SCREEN_HEIGHT))
+		small_meteor_group.add(small_meteor)
+
+		# if meteor (mob) hit earth 3x GAME OVER
+		EARTH_HEALTH -= 1
+		if EARTH_HEALTH < 0:
+			bullet_ready = False
+			rocket_ready = False
+
+			game_over_trigger = False
+			player.kill()
+
+	# keyboard imput
+	keys = pygame.key.get_pressed()
+
+	# fullscreen and window mode switcher
+	if keys[pygame.K_f] and switch_screen == True:
+		SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+		switch_screen = False
+
+	elif keys[pygame.K_f] and switch_screen == False:
+		SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+		switch_screen = True
 
 	# triggering player shooting
 	# on left mouse click fire bullets
@@ -346,7 +404,7 @@ while running:
 		bullet = Bullet(pos_x=(player.rect.x), pos_y=(player.rect.y + 25))
 		bullet_group.add(bullet)
 
-	# bullet realading mechanism
+	# bullet reloading mechanism
 	elif bullet_amount <= bullet_amount:
 		bullet_amount += 0.1
 		if bullet_amount >= bullet_amount_maximum:
@@ -366,34 +424,62 @@ while running:
 		bullet_ready = False
 		rocket_ready = False
 
+		# game over triger
+		game_over_trigger = False
+
 	if pygame.sprite.groupcollide(player_group, hudge_meteor_group, True, False, pygame.sprite.collide_rect_ratio(.85)):
 		# if mob hit player bullets and rockets not fireing
 		bullet_ready = False
 		rocket_ready = False
 
-	# bullet hit mob
+		# game over triger
+		game_over_trigger = False
+
+	if pygame.sprite.groupcollide(player_group, small_meteor_group, True, False, pygame.sprite.collide_rect_ratio(.85)):
+		# if mob hit player bullets and rockets not fireing
+		bullet_ready = False
+		rocket_ready = False
+
+		# game over triger
+		game_over_trigger = False
+
+	# bullet hit metheor
 	if pygame.sprite.groupcollide(bullet_group, meteor_group, True, True, pygame.sprite.collide_rect_ratio(1)):
 		meteor = Meteor(pos_y=random.randint(30, SCREEN_HEIGHT - 30))
 		meteor_group.add(meteor)
 
 		score += 5
 
-	# rocket hit mob
+	# rocket hit metheor
 	if pygame.sprite.groupcollide(rocket_group, meteor_group, False, True, pygame.sprite.collide_rect_ratio(1)):
 		meteor = Meteor(pos_y=random.randint(30, SCREEN_HEIGHT - 30))
 		meteor_group.add(meteor)
 
 		score += 10
 
+	# bullet hit hudge meteor
 	if pygame.sprite.groupcollide(bullet_group, hudge_meteor_group, True, False, pygame.sprite.collide_rect_ratio(1)):
 		pass
 
-	# rocket hit mob
+	# rocket hit hudge meteor
 	if pygame.sprite.groupcollide(rocket_group, hudge_meteor_group, True, True, pygame.sprite.collide_rect_ratio(1)):
-		hudge_meteor_group.update()
-		hudge_meteor_group.draw(SCREEN)
+		hudge_meteor_group = pygame.sprite.Group()
+		hudge_meteor = Hudge_Meteor(pos_x=random.randint(4500, 5500))
+		hudge_meteor_group.add(hudge_meteor)
 
 		score += 20
+
+	# bullet hit small meteor
+	if pygame.sprite.groupcollide(bullet_group, small_meteor_group, True, True, pygame.sprite.collide_rect_ratio(1)):
+		pass
+
+	# rocket hit small meteor
+	if pygame.sprite.groupcollide(rocket_group, small_meteor_group, True, True, pygame.sprite.collide_rect_ratio(1)):
+		small_meteor_group = pygame.sprite.Group()
+		small_meteor = Small_Meteor(pos_x=random.randint(9500, 10500))
+		small_meteor_group.add(small_meteor)
+
+		score += 30
 
 	# drawing sprites on the screen
 	SCREEN.fill(BLACK)
@@ -417,10 +503,24 @@ while running:
 	hudge_meteor_group.update()
 	hudge_meteor_group.draw(SCREEN)
 
+	small_meteor_group.update()
+	small_meteor_group.draw(SCREEN)
+
 	earth_health_indicator()
 	bullet_overheat()
 	rockets_indicator()
-	score_counter()
+
+	# condition for displaying game over text over the screen
+	if game_over_trigger == False:
+		# game over text
+		my_font = pygame.font.SysFont("Comic Sans MS", 90)
+		game_over = my_font.render("GAME OVER!", False, RED)
+		SCREEN.blit(game_over, ((SCREEN_WIDTH // 6), (SCREEN_HEIGHT // 2.5)))
+
+		# game over score
+		my_font = pygame.font.SysFont("Comic Sans MS", 30)
+		game_over_score  = my_font.render(f"SCORE: {score}", False, GREEN)
+		SCREEN.blit(game_over_score, ((SCREEN_WIDTH // 2.4), (SCREEN_HEIGHT // 1.75)))
 
 	# fps counter
 	pygame.display.flip()
