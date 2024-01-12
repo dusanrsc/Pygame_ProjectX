@@ -67,18 +67,6 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 TITLE = pygame.display.set_caption(f"{SCREEN_TITLE} {__version__}")
 MOUSE_VISIBILITY = pygame.mouse.set_visible(False)
 
-# game lists
-# explosion list
-explosion = []
-explosion.append(pygame.image.load("explosion0.png").convert())
-explosion.append(pygame.image.load("explosion1.png").convert())
-explosion.append(pygame.image.load("explosion2.png").convert())
-explosion.append(pygame.image.load("explosion3.png").convert())
-explosion.append(pygame.image.load("explosion4.png").convert())
-explosion.append(pygame.image.load("explosion5.png").convert())
-explosion.append(pygame.image.load("explosion6.png").convert())
-explosion.append(pygame.image.load("explosion7.png").convert())
-
 # game classes
 # class player
 class Player(pygame.sprite.Sprite):
@@ -282,9 +270,6 @@ def rockets_indicator():
 		SCREEN.blit(rocket_thumbnail1, (730, 10))
 		SCREEN.blit(rocket_thumbnail2, (750, 10))
 		SCREEN.blit(rocket_thumbnail3, (770, 10))
-
-def menu():
-	pass
 
 # creating sprite groups
 # player sprite group
