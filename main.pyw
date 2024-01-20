@@ -1,4 +1,3 @@
-# all static files (sprites) must be in the same path as 'main.pyw' for proper working
 # importing modules
 import pygame
 import random
@@ -72,7 +71,7 @@ MOUSE_VISIBILITY = pygame.mouse.set_visible(False)
 class Player(pygame.sprite.Sprite):
 	def __init__(self, pos_x=0, pos_y=0):
 		super().__init__()
-		self.image = pygame.image.load("player.png").convert()
+		self.image = pygame.image.load("static/player.png").convert()
 		self.image.set_colorkey(ALPHA)
 		self.rect = self.image.get_rect(center = [pos_x, pos_y])
 
@@ -84,7 +83,7 @@ class Player(pygame.sprite.Sprite):
 class Bullet(pygame.sprite.Sprite):
 	def __init__(self, pos_x=0, pos_y=0):
 		super().__init__()
-		self.image = pygame.image.load("bullet.png").convert()
+		self.image = pygame.image.load("static/bullet.png").convert()
 		self.image.set_colorkey(ALPHA)
 		self.rect = self.image.get_rect(center = [pos_x + 80, pos_y])
 
@@ -99,7 +98,7 @@ class Bullet(pygame.sprite.Sprite):
 class Rocket(pygame.sprite.Sprite):
 	def __init__(self, pos_x=0, pos_y=0):
 		super().__init__()
-		self.image = pygame.image.load("rocket.png").convert()
+		self.image = pygame.image.load("static/rocket.png").convert()
 		self.image.set_colorkey(ALPHA)
 		self.rect = self.image.get_rect(center = [pos_x + 80, pos_y])
 
@@ -115,7 +114,7 @@ class Rocket(pygame.sprite.Sprite):
 class Meteor(pygame.sprite.Sprite):
 	def __init__(self, pos_x=SCREEN_WIDTH, pos_y=random.randint(30, SCREEN_HEIGHT - 30)):
 		super().__init__()
-		self.image = pygame.image.load("meteor.png").convert()
+		self.image = pygame.image.load("static/meteor.png").convert()
 		self.image.set_colorkey(ALPHA)
 		self.rect = self.image.get_rect(center = [pos_x, pos_y])
 
@@ -130,7 +129,7 @@ class Meteor(pygame.sprite.Sprite):
 class Hudge_Meteor(pygame.sprite.Sprite):
 	def __init__(self, pos_x=(SCREEN_WIDTH + SCREEN_WIDTH), pos_y=random.randint(30, SCREEN_HEIGHT - 30)):
 		super().__init__()
-		self.image = pygame.image.load("hudge_meteor.png").convert()
+		self.image = pygame.image.load("static/hudge_meteor.png").convert()
 		self.image.set_colorkey(ALPHA)
 		self.rect = self.image.get_rect(center = [pos_x, pos_y])
 
@@ -145,7 +144,7 @@ class Hudge_Meteor(pygame.sprite.Sprite):
 class Small_Meteor(pygame.sprite.Sprite):
 	def __init__(self, pos_x=(SCREEN_WIDTH + SCREEN_WIDTH), pos_y=random.randint(30, SCREEN_HEIGHT - 30)):
 		super().__init__()
-		self.image = pygame.image.load("small_meteor.png").convert()
+		self.image = pygame.image.load("static/small_meteor.png").convert()
 		self.image.set_colorkey(ALPHA)
 		self.rect = self.image.get_rect(center = [pos_x, pos_y])
 
@@ -168,7 +167,7 @@ def exit():
 # health indicator
 def earth_health_indicator():
 	# earth thumbnail
-	earth_thumbnail = pygame.image.load("earth_thumbnail.png")
+	earth_thumbnail = pygame.image.load("static/earth_thumbnail.png")
 	earth_thumbnail.set_colorkey(ALPHA)
 
 	# 100% health
@@ -210,13 +209,13 @@ def bullet_overheat():
 def rockets_indicator():
 	# rocket thumbnail
 	if rocket_amount == 3:
-		rocket_thumbnail1 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail1 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail1.set_colorkey(ALPHA)
 
-		rocket_thumbnail2 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail2 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail2.set_colorkey(ALPHA)
 
-		rocket_thumbnail3 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail3 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail3.set_colorkey(ALPHA)
 
 		SCREEN.blit(rocket_thumbnail1, (730, 10))
@@ -224,13 +223,13 @@ def rockets_indicator():
 		SCREEN.blit(rocket_thumbnail3, (770, 10))
 
 	elif rocket_amount == 2:
-		rocket_thumbnail1 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail1 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail1.set_colorkey(ALPHA)
 
-		rocket_thumbnail2 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail2 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail2.set_colorkey(ALPHA)
 
-		rocket_thumbnail3 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail3 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail3.set_colorkey(ALPHA)
 		rocket_thumbnail3.set_alpha(alpha_value)
 
@@ -239,14 +238,14 @@ def rockets_indicator():
 		SCREEN.blit(rocket_thumbnail3, (770, 10))
 
 	elif rocket_amount == 1:
-		rocket_thumbnail1 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail1 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail1.set_colorkey(ALPHA)
 
-		rocket_thumbnail2 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail2 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail2.set_colorkey(ALPHA)
 		rocket_thumbnail2.set_alpha(alpha_value)
 
-		rocket_thumbnail3 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail3 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail3.set_colorkey(ALPHA)
 		rocket_thumbnail3.set_alpha(alpha_value)
 
@@ -255,15 +254,15 @@ def rockets_indicator():
 		SCREEN.blit(rocket_thumbnail3, (770, 10))
 
 	else:
-		rocket_thumbnail1 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail1 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail1.set_colorkey(ALPHA)
 		rocket_thumbnail1.set_alpha(alpha_value)
 
-		rocket_thumbnail2 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail2 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail2.set_colorkey(ALPHA)
 		rocket_thumbnail2.set_alpha(alpha_value)
 
-		rocket_thumbnail3 = pygame.image.load("rocket_thumbnail.png")
+		rocket_thumbnail3 = pygame.image.load("static/rocket_thumbnail.png")
 		rocket_thumbnail3.set_colorkey(ALPHA)
 		rocket_thumbnail3.set_alpha(alpha_value)
 
@@ -299,15 +298,15 @@ small_meteor_group.add(small_meteor)
 
 # loading decoration images
 # earth image
-earth = pygame.image.load("earth.png")
+earth = pygame.image.load("static/earth.png")
 earth.set_colorkey(ALPHA)
 
 # sun image
-sun = pygame.image.load("sun.png")
+sun = pygame.image.load("static/sun.png")
 sun.set_colorkey(ALPHA)
 
 # moon image
-moon = pygame.image.load("moon.png")
+moon = pygame.image.load("static/moon.png")
 moon.set_colorkey(ALPHA)
 
 # main game loop
